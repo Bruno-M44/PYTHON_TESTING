@@ -70,7 +70,7 @@ class TestClient:
     places = 12
     print("CLIENT", client)
     response = client.post("/purchasePlaces", 
-                            data={ "name" : places })
+                            data={ "places" : places })
     assert response.status_code == 200
     
     
