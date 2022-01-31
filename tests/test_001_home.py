@@ -1,5 +1,4 @@
 from server import app
-import codecs
 import pytest
 
 
@@ -17,11 +16,17 @@ class TestHome:
     :tests: test_home_page
         :returns:
             status code OK test
-            matching data with template index.html test
+            content test :
+                welcome message test
+                input message test
+                email form test
     """
     def test_home_page(self, client):
         response = client.get('/')
         data = response.data.decode()
-        index_content = codecs.open("templates/index.html", 'r').read()
         assert response.status_code == 200
-        assert data == index_content
+        assert "<h1>Welcome to the GUDLFT Registration Portal!</h1>" in data
+        assert "Please enter your secretary email to continue:" in data
+        assert """<label for="email">Email:</label>""" in data
+        assert """<input type="email" name="email" id="" required>""" in data
+        assert """<button type="submit">Enter</button>""" in data
