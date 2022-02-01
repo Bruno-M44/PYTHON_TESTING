@@ -47,13 +47,8 @@ def book(competition, club):
     clubs = loadClubs()
     foundClub = [c for c in clubs if c['name'] == club][0]
     foundCompetition = [c for c in competitions if c['name'] == competition][0]
-    if foundClub and foundCompetition:
-        return render_template('booking.html', club=foundClub,
-                               competition=foundCompetition)
-    else:
-        flash("Something went wrong-please try again")
-        return render_template('welcome.html', club=club,
-                               competitions=competitions)
+    return render_template('booking.html', club=foundClub,
+                           competition=foundCompetition)
 
 
 @app.route('/purchasePlaces', methods=['POST'])
@@ -76,14 +71,28 @@ def purchasePlaces():
             " number of places available"
         return render_template('booking.html', message=message,
                                competition=competition, club=club)
+    elif int(club["points"]) <= placesRequired:
+        message = "Please fill a number of places less than or equal to" +\
+            " number of points available (" + club["points"] + " points)"
+        return render_template('booking.html', message=message,
+                               competition=competition, club=club)
+    elif placesRequired > 12:
+        message = "Please fill a number of places less than to 12"
+        return render_template('booking.html', message=message,
+                               competition=competition, club=club)
     else:
         competition["numberOfPlaces"] =\
             str(int(competition["numberOfPlaces"]) - placesRequired)
+        club["points"] =\
+            str(int(club["points"]) - placesRequired)
         with open('competitions.json', "w") as comps:
             json.dump({"competitions": competitions}, comps)
+        with open('clubs.json', "w") as comps:
+            json.dump({"clubs": clubs}, comps)
 
-        flash('Great-booking complete!')
-        return render_template('welcome.html', club=club,
+        message = "Great-booking complete!"
+        return render_template('welcome.html', alert="success",
+                               message=message, club=club,
                                competitions=competitions)
 
 

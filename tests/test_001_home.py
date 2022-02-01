@@ -20,6 +20,9 @@ class TestHome:
                 welcome message test
                 input message test
                 email form test
+    :tests: test_logout
+        :returns:
+            status code FOUND test
     """
     def test_home_page(self, client):
         response = client.get('/')
@@ -30,3 +33,9 @@ class TestHome:
         assert """<label for="email">Email:</label>""" in data
         assert """<input type="email" name="email" id="" required>""" in data
         assert """<button type="submit">Enter</button>""" in data
+
+    def test_logout(self, client):
+        response = client.get('/logout')
+        data = response.data.decode()
+        print("DATA", data)
+        assert response.status_code == 302  # Found
