@@ -1,8 +1,5 @@
-from server import app, loadClubs, loadCompetitions
+from server import app, loadCompetitions
 import pytest
-
-listOfClubs = loadClubs()
-listOfCompetitions = loadCompetitions()
 
 
 @pytest.fixture
@@ -24,11 +21,12 @@ class TestBookCompetitionClub:
                 places available (matches with clubs.json)
     """
     def test_book_page_display(self, client):
+        competitions = loadCompetitions()
         response = client.get(
-            "/book/" + listOfCompetitions[0]["name"] + "/Simply Lift")
+            "/book/" + competitions[0]["name"] + "/Simply Lift")
         data = response.data.decode()
         assert response.status_code == 200
 
-        assert listOfCompetitions[0]["name"] in data
+        assert competitions[0]["name"] in data
         assert "Places available: " +\
-            listOfCompetitions[0]["numberOfPlaces"] in data
+            competitions[0]["numberOfPlaces"] in data
