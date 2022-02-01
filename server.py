@@ -17,9 +17,6 @@ def loadCompetitions():
 app = Flask(__name__)
 app.secret_key = 'something_special'
 
-competitions = loadCompetitions()
-clubs = loadClubs()
-
 
 @app.route('/')
 def index():
@@ -28,6 +25,8 @@ def index():
 
 @app.route('/showSummary', methods=['POST'])
 def showSummary():
+    competitions = loadCompetitions()
+    clubs = loadClubs()
     message = ""
     if not request.form["email"]:
         message = "Please fill out this field"
@@ -44,6 +43,8 @@ def showSummary():
 
 @app.route('/book/<competition>/<club>')
 def book(competition, club):
+    competitions = loadCompetitions()
+    clubs = loadClubs()
     foundClub = [c for c in clubs if c['name'] == club][0]
     foundCompetition = [c for c in competitions if c['name'] == competition][0]
     if foundClub and foundCompetition:
@@ -57,15 +58,33 @@ def book(competition, club):
 
 @app.route('/purchasePlaces', methods=['POST'])
 def purchasePlaces():
+    competitions = loadCompetitions()
+    clubs = loadClubs()
     competition = [c for c in competitions if c['name'] ==
                    request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
+
+    if not request.form['places'].isdigit():
+        message = "Please enter a number"
+        return render_template('booking.html', message=message,
+                               competition=competition, club=club)
+
     placesRequired = int(request.form['places'])
-    competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - \
-        placesRequired
-    flash('Great-booking complete!')
-    return render_template('welcome.html', club=club,
-                           competitions=competitions)
+
+    if int(competition["numberOfPlaces"]) < placesRequired:
+        message = "Please fill a number of places less than or equal to" +\
+            " number of places available"
+        return render_template('booking.html', message=message,
+                               competition=competition, club=club)
+    else:
+        competition["numberOfPlaces"] =\
+            str(int(competition["numberOfPlaces"]) - placesRequired)
+        with open('competitions.json', "w") as comps:
+            json.dump({"competitions": competitions}, comps)
+
+        flash('Great-booking complete!')
+        return render_template('welcome.html', club=club,
+                               competitions=competitions)
 
 
 # TODO: Add route for points display
