@@ -45,12 +45,12 @@
 5. Testing
 
     There is a directory tests with several directory :
-        * unit_test : there is all the unit tests. The coverage is 100 % (htmlcov/index.html).
-            To launch, enter <code>pytest -v</code>
-        * integration_tests : It's a test sequence.
-            To launch, enter <code>pytest .\tests\integration_tests\test_integration.py::TestIntegration</code>
-        * performance_tests : it's the code to launch locust. 
-            To launch, launch server and enter <code>locust</code> in the directory 
-            test/performance_tests
-        * test_reports : this file contains all the test results.
+    * unit_test : there is all the unit tests. The coverage is 100 % (htmlcov/index.html).
+        To launch, enter <code>pytest -v</code>
+    * integration_tests : It's a test sequence.
+        To launch, enter <code>pytest .\tests\integration_tests\test_integration.py::TestIntegration</code>
+    * performance_tests : it's the code to launch locust. 
+        To launch, launch server and enter <code>locust</code> in the directory 
+        test/performance_tests
+    * test_reports : this file contains all the test results.
 
