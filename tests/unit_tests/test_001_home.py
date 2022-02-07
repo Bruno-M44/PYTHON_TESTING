@@ -37,5 +37,4 @@ class TestHome:
     def test_logout(self, client):
         response = client.get('/logout')
         data = response.data.decode()
-        print("DATA", data)
         assert response.status_code == 302  # Found
